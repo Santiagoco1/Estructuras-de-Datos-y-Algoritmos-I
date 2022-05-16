@@ -12,7 +12,13 @@ typedef enum {
   BTREE_RECORRIDO_POST /** Postorden */
 } BSTreeRecorrido;
 
+struct _BST_Nodo {
+  void *dato;
+  struct _BST_Nodo *izq, *der;
+};
+
 typedef struct _BST_Nodo *BSTree;
+
 
 /**
  * Retorna un arbol de busqueda binaria vacio.
@@ -45,6 +51,8 @@ BSTree buscar_hoja_mas_grande(BSTree arbol);
 
 BSTree bstree_eliminar(BSTree arbol, void *dato,FuncionComparadora, FuncionDestructora);
 
-BSTree bstree_kesimo_menor(BSTree arbol, int k);
+void* bstree_kesimo_menor(BSTree arbol, int k);
+
+int bstree_validar(BSTree arbol, void* max, void* min, FuncionComparadora);
 
 #endif //__BSTREE_H__

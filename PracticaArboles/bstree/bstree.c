@@ -9,11 +9,6 @@
  * un puntero al nodo raiz del subarbol izquierdo (izq),
  * y un puntero al nodo raiz del subarbol derecho (der).
  */
-struct _BST_Nodo {
-  void *dato;
-  struct _BST_Nodo *izq, *der;
-};
-
 /**
  * bstee_crear: Retorna un arbol de busqueda binaria vacio
  */
@@ -132,9 +127,32 @@ BSTree bstree_eliminar(BSTree arbol, void *dato, FuncionComparadora comp, Funcio
   }
 }
 
-BSTree bstree_kesimo_menor(BSTree arbol, int k) {
-  if(!arbol) return NULL;
-  else if(k==0) return arbol;
-  else if(bstree_kesimo_menor(arbol->izq, k-1)) return bstree_kesimo_menor(arbol->izq, k-1);
-  else return bstree_kesimo_menor(arbol->der, k-1);
+// BSTree bstree_kesimo_menor(BSTree arbol, int k) {
+//   if(!arbol) return NULL;
+//   else if(k==0) return arbol;
+//   else if(bstree_kesimo_menor(arbol->izq, k-1)) return bstree_kesimo_menor(arbol->izq, k-1);
+//   else return bstree_kesimo_menor(arbol->der, k-1);
+// }
+int bstree_size(BSTree arbol) {
+  if (!arbol) return 0;
+  return bstree_size(arbol -> izq) + bstree_size(arbol -> der) + 1;
+}
+
+void* bstree_kesimo_menor(BSTree arbol, int k) {
+  if (!arbol) return NULL;
+  int size = bstree_size(arbol -> izq);
+  if (size + 1 == k) return arbol -> dato;
+  if (size >= k) return bstree_kesimo_menor(arbol -> izq, k);
+  return bstree_kesimo_menor(arbol -> der, k - size - 1);
+}
+
+int bstree_validar(BSTree arbol, void *max, void *min, FuncionComparadora comp) {
+  if(!arbol) return 1;
+
+  int ret = 1;
+  if(max != NULL) ret = ret && comp(max, arbol -> dato) >= 0;
+  if(min != NULL) ret = ret && comp(arbol -> dato, min) >= 0;
+  ret = ret && bstree_validar(arbol->izq, arbol->dato, min, comp)
+            && bstree_validar(arbol->der, max, arbol->dato, comp);
+  return ret;
 }

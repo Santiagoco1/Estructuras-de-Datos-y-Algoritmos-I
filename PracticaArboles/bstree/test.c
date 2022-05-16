@@ -19,6 +19,7 @@ static void *copiar_cadena(void *dato) {
 static int comparar_cadena(void *dato1, void *dato2) {
   return strcmp(dato1, dato2);
 }
+
 static void destruir_cadena(void *dato) { free(dato); }
 static void imprimir_cadena(void *dato, __attribute__((unused)) void *extra) {
   /* __attribute__((unused)) le dice al compilador que esta variable puede no
@@ -38,15 +39,17 @@ int main() {
   for (int i = 0; i < N_PALABRAS; i++)
     arbol = bstree_insertar(arbol, palabras[i], copiar_cadena, comparar_cadena);
 
-  // Eliminar elemento
-  arbol = bstree_eliminar(arbol, "rosario", comparar_cadena, destruir_cadena);
 
-  arbol = bstree_kesimo_menor(arbol, 5);
+  // Eliminar elemento
 
   // Imprimir el arbol inorden (alfabetico)
   printf("Recorrido inorden:\n");
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_cadena, NULL);
   puts("");
+
+  char *kp = (char*)bstree_kesimo_menor(arbol, 3);
+  printf("kp=%p\n", kp);
+  printf("kp->%s\n", kp);
 
   // Buscar elementos
   // assert(bstree_buscar(arbol, "farmacia", comparar_cadena) == 1);
